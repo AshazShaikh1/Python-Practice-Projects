@@ -6,6 +6,7 @@ tasks = []
 
 
 def loadTask():
+    global tasks
     try:
         with open("tasks.json", "r") as file:
             tasks = json.load(file)
@@ -25,7 +26,8 @@ def menu():
     print("2. Remove Task")
     print("3. View Tasks")
     print("4. Mark Task Complete")
-    print("5. Exit")
+    print("5. Edit Task")
+    print("6. Exit")
     print("==============================")
 
 
@@ -53,17 +55,17 @@ def removeTask():
         print("Invalid input")
         found = False
 
-        for t in tasks:
-            if t["id"] == RmId:
-                tasks.remove(t)
-                found = True
-                saveTask()
-                print("🗑 Task removed.")
-                break
+    for t in tasks:
+        if t["id"] == RmId:
+            tasks.remove(t)
+            found = True
+            saveTask()
+            print("🗑 Task removed.")
+            break
 
-        if not found:
-            print("Task not found.")
-        input("\nPress Enter to continue...")
+    if not found:
+        print("Task not found.")
+    input("\nPress Enter to continue...")
 
 
 def viewTask():
@@ -101,6 +103,28 @@ def markAsComplete():
     input("\nPress Enter to continue...")
 
 
+def editTask():
+    try:
+        id = int(input("Enter ID of the task to rename: "))
+    except:
+        print("Enter valid input")
+
+    found = False
+
+    for t in tasks:
+        if t["id"] == id:
+            newTitle = input("Enter new task: ")
+            t["title"] = newTitle
+            saveTask()
+            print("Task was edited")
+            found = True
+            break
+
+    if not found:
+        print("Task was not found")
+    input("\nPress Enter to continue...")
+
+
 loadTask()
 
 
@@ -122,6 +146,8 @@ while True:
     elif choice == 4:
         markAsComplete()
     elif choice == 5:
+        editTask()
+    elif choice == 6:
         print("\nThank you for using Task Manager 👋")
         break
     else:
