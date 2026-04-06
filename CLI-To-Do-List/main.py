@@ -25,22 +25,24 @@ def taskCounter():
         if i["status"]:
             completed += 1
     pending = total - completed
-    print("Total number of tasks", total)
-    print("Completed tasks", completed)
-    print("Pending tasks", pending)
+    return total, completed, pending
 
 
 def menu():
-    print("\n==============================")
-    print("        TASK MANAGER")
-    print("==============================")
+    total, completed, pending = taskCounter()
+
+    print("\n====================================")
+    print("           TASK MANAGER")
+    print("====================================")
+    print(f"Total: {total} | Completed: {completed} | Pending: {pending}")
+    print("------------------------------------")
     print("1. Add Task")
     print("2. Remove Task")
     print("3. View Tasks")
     print("4. Mark Task Complete")
     print("5. Edit Task")
     print("6. Exit")
-    print("==============================")
+    print("====================================")
 
 
 def saveTask():
@@ -49,20 +51,22 @@ def saveTask():
 
 
 def addTask():
-    title = input("\nEnter the name of the task: ")
+    print("\n--- ADD NEW TASK ---")
+    title = input("Enter task name: ")
 
     task = {"id": len(tasks) + 1, "title": title, "status": False}
 
     tasks.append(task)
     saveTask()
 
-    print("✅ Task added successfully.")
+    print("\n✅ Task added successfully.")
     input("\nPress Enter to continue...")
 
 
 def removeTask():
+    print("\n--- REMOVE TASK ---")
     try:
-        RmId = int(input("\nEnter the task number to remove: "))
+        RmId = int(input("Enter task ID to remove: "))
     except:
         print("Invalid input")
         found = False
@@ -72,32 +76,82 @@ def removeTask():
             tasks.remove(t)
             found = True
             saveTask()
-            print("🗑 Task removed.")
+            print("\n🗑 Task removed.")
             break
 
     if not found:
-        print("Task not found.")
+        print("\nTask not found.")
+
     input("\nPress Enter to continue...")
+
+
+def taskFilter(filter):
+
+    print("\n----------- TASK LIST -----------")
+
+    if filter == 1:
+
+        if not tasks:
+            print("No tasks available.")
+        else:
+            try:
+                for t in tasks:
+                    status = "✔" if t["status"] else "✘"
+                    print(f"{t['id']}. {t['title']}  [{status}]")
+            except:
+                print("No tasks available.")
+
+    elif filter == 2:
+        try:
+            for t in tasks:
+                if t["status"] == True:
+                    print(f"{t['id']}. {t['title']}  [✔]")
+        except:
+            print("No completed task")
+
+    elif filter == 3:
+        try:
+            for t in tasks:
+                if t["status"] == False:
+                    print(f"{t['id']}. {t['title']}  [✘]")
+        except:
+            print("No pending task")
+
+    print("---------------------------------")
 
 
 def viewTask():
-    print("\n----------- TASK LIST -----------")
 
-    if not tasks:
-        print("No tasks available.")
-    else:
-        for t in tasks:
-            status = "✔" if t["status"] else "✘"
-            print(f"{t['id']}. {t['title']} [{status}]")
-        taskCounter()
+    print("\n======= VIEW TASKS =======")
+    print("1. Show All Tasks")
+    print("2. Show Completed Tasks")
+    print("3. Show Pending Tasks")
+    print("==========================")
 
-    print("---------------------------------")
-    input("\nPress Enter to continue...")
+    try:
+        filter = int(input("Select filter: "))
+    except:
+        print("Enter valid input")
+
+    if filter == 1:
+        taskFilter(filter)
+        input("\nPress Enter to continue...")
+
+    elif filter == 2:
+        taskFilter(filter)
+        input("\nPress Enter to continue...")
+
+    elif filter == 3:
+        taskFilter(filter)
+        input("\nPress Enter to continue...")
 
 
 def markAsComplete():
+
+    print("\n--- MARK TASK COMPLETE ---")
+
     try:
-        taskId = int(input("\nEnter task Id: "))
+        taskId = int(input("Enter task ID: "))
     except:
         print("Invalid input")
 
@@ -108,17 +162,21 @@ def markAsComplete():
             t["status"] = True
             found = True
             saveTask()
-            print("✔ Task marked as complete.")
+            print("\n✔ Task marked as complete.")
             break
 
     if not found:
-        print("Task not found.")
+        print("\nTask not found.")
+
     input("\nPress Enter to continue...")
 
 
 def editTask():
+
+    print("\n--- EDIT TASK ---")
+
     try:
-        id = int(input("Enter ID of the task to rename: "))
+        id = int(input("Enter task ID to edit: "))
     except:
         print("Enter valid input")
 
@@ -126,26 +184,27 @@ def editTask():
 
     for t in tasks:
         if t["id"] == id:
-            newTitle = input("Enter new task: ")
+            newTitle = input("Enter new task name: ")
             t["title"] = newTitle
             saveTask()
-            print("Task was edited")
+            print("\n✏ Task updated.")
             found = True
             break
 
     if not found:
-        print("Task was not found")
+        print("\nTask not found.")
+
     input("\nPress Enter to continue...")
 
 
 loadTask()
 
-
 while True:
     clear()
     menu()
+
     try:
-        choice = int(input("Enter your choice: "))
+        choice = int(input("\nEnter your choice: "))
     except:
         print("Invalid input. Please enter a number.")
         continue
@@ -164,4 +223,4 @@ while True:
         print("\nThank you for using Task Manager 👋")
         break
     else:
-        print("Invalid option. Please choose between 1-5.")
+        print("Invalid option. Please choose between 1-6.")
