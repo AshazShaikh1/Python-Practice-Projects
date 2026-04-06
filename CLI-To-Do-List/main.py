@@ -18,6 +18,18 @@ def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
 
+def taskCounter():
+    completed = 0
+    total = len(tasks)
+    for i in tasks:
+        if i["status"]:
+            completed += 1
+    pending = total - completed
+    print("Total number of tasks", total)
+    print("Completed tasks", completed)
+    print("Pending tasks", pending)
+
+
 def menu():
     print("\n==============================")
     print("        TASK MANAGER")
@@ -77,6 +89,7 @@ def viewTask():
         for t in tasks:
             status = "✔" if t["status"] else "✘"
             print(f"{t['id']}. {t['title']} [{status}]")
+        taskCounter()
 
     print("---------------------------------")
     input("\nPress Enter to continue...")
